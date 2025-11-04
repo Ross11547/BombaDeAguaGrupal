@@ -1,8 +1,6 @@
-# -*- coding: utf-8 -*-
 import pygame, math
 pygame.init()
 
-# ===== Config =====
 ancho_ventana, alto_ventana = 1200, 700
 ventana = pygame.display.set_mode((ancho_ventana, alto_ventana))
 pygame.display.set_caption("Simulación Bomba de Agua – Diseño Básico")
@@ -11,7 +9,6 @@ fuente_titulo = pygame.font.SysFont("consolas", 20, bold=True)
 fuente_med    = pygame.font.SysFont("consolas", 16)
 fuente_peq    = pygame.font.SysFont("consolas", 14)
 
-# ===== Colores =====
 color_fondo       = (245, 247, 250)
 color_linea       = (30, 33, 38)
 color_texto       = (32, 36, 40)
@@ -26,7 +23,6 @@ color_bomba_borde = (32, 36, 40)
 color_hormigon    = (220, 222, 226)
 color_hormigon_r  = (170, 170, 175)
 
-# Panel (claro)
 color_panel_sombra  = (0, 0, 0, 70)
 color_panel_fondo   = (255, 255, 255)
 color_panel_borde   = (206, 210, 220)
@@ -37,41 +33,33 @@ color_panel_alerta  = (206, 148, 18)
 color_panel_peligro = (206, 55, 55)
 color_acento        = (68, 134, 255)
 
-# Barras
 color_barra_track = (234, 238, 244)
 color_barra_fill  = (68, 134, 255)
 color_barra_borde = (195, 202, 214)
 
-# Botón panel
 color_boton_fondo = (40, 42, 48)
 color_boton_borde = (210, 210, 210)
 color_boton_texto = (240, 240, 240)
 rect_boton_panel  = pygame.Rect(ancho_ventana - 170, alto_ventana - 54, 150, 38)
 
-# ===== Geometría =====
 y_suelo = 320
 ancho_camara_total = 410
 alto_cisterna_px   = 220
 x_cisterna         = 520
 
-# cisterna como un solo tanque (sin línea central)
 rect_cisterna = pygame.Rect(x_cisterna, y_suelo + 20, ancho_camara_total, alto_cisterna_px)
 grosor_muro = 4
 def rect_interno(r): return pygame.Rect(r.x + grosor_muro, r.y + grosor_muro, r.w - 2*grosor_muro, r.h - 2*grosor_muro)
 rect_cisterna_int = rect_interno(rect_cisterna)
 
-# bomba
 ancho_bomba, alto_bomba = 130, 55
 rect_bomba = pygame.Rect(rect_cisterna.x + 20, y_suelo - alto_bomba - 12, ancho_bomba, alto_bomba)
 
-# tanque superior (mismo tamaño vertical que cisterna)
 rect_tanque_superior = pygame.Rect(170, 70, 280, 220)
 
-# panel
 panel_visible = True
 rect_panel = pygame.Rect(ancho_ventana - 355, 00, 335, 300)
 
-# ===== Escalas =====
 alto_cisterna_cm   = 200.0
 alto_tanque_sup_cm = 200.0
 px_por_cm_cis = rect_cisterna_int.h / alto_cisterna_cm
@@ -81,7 +69,6 @@ fondo_px_sup  = rect_tanque_superior.bottom - 10
 def cm_a_y_cis(v): return int(fondo_px_cis - v * px_por_cm_cis)
 def cm_a_y_sup(v): return int(fondo_px_sup - v * px_por_cm_sup)
 
-# ===== Estado =====
 nivel_cisterna_cm       = 140.0
 nivel_tanque_sup_cm     = 30.0
 altura_boca_manguera_cm = 120.0
@@ -100,7 +87,6 @@ distancia_suelo_segura_cm      = 50.0
 distancia_superficie_segura_cm = 20.0
 factor_tiempo_simulacion       = 8.0
 
-# ===== Util =====
 def limitar(v, a, b):
     if v < a: return a
     if v > b: return b
@@ -143,7 +129,6 @@ def chip_estado(s, x, y, texto, activo):
     pygame.draw.circle(s, col, (r.x+12, r.y+11), 6)
     dibujar_texto(s, texto, r.x+26, r.y+3, color_panel_texto, fuente_peq)
 
-# ===== Dibujo =====
 def dibujar_tanque_superior(nivel, t):
     pygame.draw.rect(ventana, (240,240,240), rect_tanque_superior, border_radius=6)
     pygame.draw.rect(ventana, color_linea, rect_tanque_superior, 2, border_radius=6)
@@ -156,30 +141,25 @@ def dibujar_tanque_superior(nivel, t):
     dibujar_texto(ventana, "Tanque superior", rect_tanque_superior.x, rect_tanque_superior.y - 24, color_texto, fuente_peq)
 
 def dibujar_cisterna(nivel, boca, t, entrada_activa):
-    # marco único (sin línea central)
     pygame.draw.rect(ventana, color_linea, rect_cisterna, grosor_muro, border_radius=4)
 
-    # agua continua
     y_sup = cm_a_y_cis(nivel)
     yi = rect_cisterna_int.bottom
     if y_sup < yi:
         agua_gradiente(ventana, rect_cisterna_int.x, y_sup, rect_cisterna_int.w, yi - y_sup)
         superficie(ventana, rect_cisterna_int.x, rect_cisterna_int.right, y_sup, t, color_linea)
 
-    # flotador (lado derecho)
     fx = rect_cisterna_int.x + int(rect_cisterna_int.w * 0.62)
     fy = y_sup - 8
     pygame.draw.circle(ventana, color_flotador, (fx, fy), 12)
     pygame.draw.circle(ventana, color_linea, (fx, fy), 12, 2)
 
-    # succión (lado derecho)
     xt = rect_cisterna_int.x + int(rect_cisterna_int.w * 0.78)
     yt = rect_cisterna_int.y + 15
     yb = cm_a_y_cis(boca)
     pygame.draw.line(ventana, color_tubo, (xt, yt), (xt, yb), 6)
     pygame.draw.circle(ventana, color_tubo, (xt, yb), 8)
 
-    # tubo de entrada (izquierda)
     y_tubo = rect_cisterna_int.y + 35
     x_izq  = rect_cisterna.x - 100
     x_codo = rect_cisterna_int.x + 15
@@ -254,19 +234,16 @@ def dibujar_panel(q_bomba_lps, q_entrada_lps, alerta):
     x = rect_panel.x + 20
     y = rect_panel.y + 20
 
-    # cabecera
     dibujar_texto(ventana, "Panel de simulación", x, y, color_panel_texto, fuente_titulo)
     pygame.draw.line(ventana, color_panel_sutil, (x, y+28), (rect_panel.right-16, y+28), 1)
     y += 36
 
-    # chips de estado
     chip_estado(ventana, x, y, "Bomba", bomba_on)
     chip_estado(ventana, x+140, y, "Entrada", entrada_on)
     y += 30
     pygame.draw.line(ventana, color_panel_sutil, (x, y), (rect_panel.right-16, y), 1)
     y += 10
 
-    # barras
     dibujar_texto(ventana, "Velocidad", x, y, color_panel_texto, fuente_peq); y += 16
     barra_h(ventana, x, y, 210, 10, velocidad_bomba*100.0); y += 22
 
@@ -282,11 +259,9 @@ def dibujar_panel(q_bomba_lps, q_entrada_lps, alerta):
     y += 16; barra_h(ventana, x, y, 210, 10, ps); y += 14
     pygame.draw.line(ventana, color_panel_sutil, (x, y+12), (rect_panel.right-16, y+12), 1); y += 24
 
-    # caudales
     dibujar_texto(ventana, f"Q bomba:   {q_bomba_lps*60:5.1f} L/min", x, y, color_panel_texto, fuente_peq); y += 18
     dibujar_texto(ventana, f"Q entrada: {q_entrada_lps*60:5.1f} L/min", x, y, color_panel_texto, fuente_peq); y += 12
 
-    # alerta
     if alerta == "":
         dibujar_texto(ventana, "OK (sin alertas)", x, y+6, color_panel_ok, fuente_peq)
     else:
@@ -294,7 +269,6 @@ def dibujar_panel(q_bomba_lps, q_entrada_lps, alerta):
         if "PELIGRO" in alerta or "CRITICO" in alerta: col = color_panel_peligro
         dibujar_texto(ventana, alerta, x, y+6, col, fuente_peq)
 
-# ===== Bucle =====
 ejecutando, tiempo_total = True, 0.0
 while ejecutando:
     dt = reloj.tick(60)/1000.0
