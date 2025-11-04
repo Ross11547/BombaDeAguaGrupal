@@ -60,8 +60,8 @@ rect_tanque_superior = pygame.Rect(170, 70, 280, 220)
 panel_visible = True
 rect_panel = pygame.Rect(ancho_ventana - 355, 00, 335, 300)
 
-alto_cisterna_cm   = 200.0
-alto_tanque_sup_cm = 200.0
+alto_cisterna_cm   = 200
+alto_tanque_sup_cm = 200
 px_por_cm_cis = rect_cisterna_int.h / alto_cisterna_cm
 px_por_cm_sup = (rect_tanque_superior.h - 20) / alto_tanque_sup_cm
 fondo_px_cis  = rect_cisterna_int.bottom
@@ -69,9 +69,9 @@ fondo_px_sup  = rect_tanque_superior.bottom - 10
 def cm_a_y_cis(v): return int(fondo_px_cis - v * px_por_cm_cis)
 def cm_a_y_sup(v): return int(fondo_px_sup - v * px_por_cm_sup)
 
-nivel_cisterna_cm       = 140.0
-nivel_tanque_sup_cm     = 30.0
-altura_boca_manguera_cm = 120.0
+nivel_cisterna_cm       = 140
+nivel_tanque_sup_cm     = 30
+altura_boca_manguera_cm = 120
 bomba_on        = True
 velocidad_bomba = 0.6
 entrada_on      = False
@@ -80,12 +80,12 @@ caudal_entrada_lps_activo = 0.8
 caudal_bomba_max_lps      = 1.5
 consumo_tanque_sup_lps    = 0.3
 
-area_cisterna_cm2   = 25000.0
-area_tanque_sup_cm2 = 25000.0
+area_cisterna_cm2   = 25000
+area_tanque_sup_cm2 = 25000
 
-distancia_suelo_segura_cm      = 50.0
-distancia_superficie_segura_cm = 20.0
-factor_tiempo_simulacion       = 8.0
+distancia_suelo_segura_cm      = 50
+distancia_superficie_segura_cm = 20
+factor_tiempo_simulacion       = 8
 
 def limitar(v, a, b):
     if v < a: return a
