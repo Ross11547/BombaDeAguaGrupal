@@ -126,8 +126,8 @@ pid=PID(PIDGains(kp=0.08, ki=0.02, kd=0.04), umin=0.0, umax=1.0, tau=0.08)  # Co
 #Auto-llenado PID de la cisterna
 auto_llenado_activo=False
 entrada_forzada_por_pid=False #Se refiere a la entrada de agua
-umbral_auto_on  = 1.0 # El nivel del agua es <1 se considera vacio y entra al auto llenado
-umbral_auto_off = 50.0 # El nivel del agua es >50 se considera suficiente agua y termina al auto llenado
+umbral_auto_on  = 50.0 # El nivel del agua es <50 se considera vacio y entra al auto llenado
+umbral_auto_off = 60.0 # El nivel del agua es >60 se considera suficiente agua y termina al auto llenado
 
 allow_pid_auto_start = True #Cuando sale del autollenado enciende la bomba para que llene el tanque porq ya hay agua en la cisterna
 
