@@ -128,6 +128,8 @@ auto_llenado_activo=False
 entrada_forzada_por_pid=False #Se refiere a la entrada de agua
 umbral_auto_on  = 50.0 # El nivel del agua es <50 se considera vacio y entra al auto llenado
 umbral_auto_off = 60.0 # El nivel del agua es >60 se considera suficiente agua y termina al auto llenado
+umbral_auto_on  = 50.0 # El nivel del agua es <50 se considera vacio y entra al auto llenado
+umbral_auto_off = 60.0 # El nivel del agua es >50 se considera suficiente agua y termina al auto llenado
 
 allow_pid_auto_start = True #Cuando sale del autollenado enciende la bomba para que llene el tanque porq ya hay agua en la cisterna
 
